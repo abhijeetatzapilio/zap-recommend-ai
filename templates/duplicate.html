@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Duplicate</title>
+    <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+        #table_detail .hidden_row {
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        function showHideRow(x) {
+            let elem=document.querySelectorAll(`[id*='hidden_row_${x}_']`);;
+            for(const e of elem){
+                $("#" + e.id).toggle();
+            }
+        }
+    </script>
+</head>
+<body>
+<div align="center">
+    <form method="POST" action="/duplicate_page" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Submit">
+    </form>
+</div><br>
+{% if similar %}
+    <table id="table_detail">
+        <tr>
+            <th>No.</th>
+            <th>Question</th>
+            <th>Count</th>
+        </tr>
+        {% for i in similar %}
+            {% set x = loop.index %}
+            <tr onclick="showHideRow({{ x }});">
+                <td>{{ x }}</td>
+                <td>{{ i }}</td>
+                <td>{{ similar[i].count }}</td>
+            </tr>
+            {% for k in similar[i].similar %}
+                <tr id="hidden_row_{{ x }}_{{ loop.index }}" class="hidden_row">
+                    <td></td>
+                    <td>{{ k }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+{% endif %}
+</body>
+</html>
